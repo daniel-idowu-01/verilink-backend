@@ -6,13 +6,12 @@ import helmet from "helmet";
 import express from "express";
 import mongoose from "mongoose";
 import logger from "./utils/logger";
+import services from "./services/index";
 import config from "./config/constants";
 import { Product } from "./models/Product";
 // import { Vendor } from "./models/Vendor";
 // import { Transaction } from "./models/Transaction";
 import { productRoutes } from "./routes/ProductRoutes";
-import { ProductService } from "./services/ProductService";
-import { ProductRepository } from "./repositories/ProductRepository";
 import { requestLogger, errorLogger } from "./middlewares/requestLogger";
 import { errorHandler, notFoundHandler } from "./middlewares/errorHandler";
 
@@ -39,12 +38,8 @@ app.use(express.urlencoded({ extended: true }));
 // Request logging
 app.use(requestLogger);
 
-// Initialize repositories and services
-const productRepository = new ProductRepository(Product);
-const productService = new ProductService(productRepository);
-
 // Routes
-app.use("/api/products", productRoutes(productService));
+app.use("/api/products", productRoutes());
 
 // 404 Handler
 app.use(notFoundHandler);

@@ -1,14 +1,13 @@
-import { Router, RequestHandler } from "express";
 import { param } from "express-validator";
+import controllers from "../controllers/index"
+import { Router, RequestHandler } from "express";
 import { authMiddleware } from "../middlewares/authMiddleware";
 import { rolesMiddleware } from "../middlewares/rolesMiddleware";
 // import { validateRequest } from "../middlewares/validateRequest";
-import { ProductController } from "../controllers/ProductController";
-import { IProductService } from "../services/interfaces/IProductService";
 
-export const productRoutes = (productService: IProductService): Router => {
+export const productRoutes = (): Router => {
   const router = Router();
-  const productController = new ProductController(productService);
+  const productController = controllers.products;
 
   // Apply auth middleware to all product routes
   router.use(authMiddleware as RequestHandler);
