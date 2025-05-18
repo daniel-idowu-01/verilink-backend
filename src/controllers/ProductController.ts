@@ -1,8 +1,12 @@
-import { BadRequestError } from "../utils/errors";
 import { Request, Response, NextFunction } from "express";
 import { IProductController } from "./interfaces/IProductController";
 import { IProductService } from "../services/interfaces/IProductService";
 import { ApiResponse, PaginatedResponse } from "../utils/responseHandler";
+import {
+  BadRequestError,
+  UnauthorizedError,
+  NotFoundError,
+} from "../utils/errors";
 
 export class ProductController implements IProductController {
   constructor(private productService: IProductService) {}
@@ -14,8 +18,7 @@ export class ProductController implements IProductController {
   ): Promise<void> => {
     try {
       if (!req.user) {
-        res.status(401).json({ message: "Unauthorized" });
-        return;
+        throw new UnauthorizedError();
       }
 
       const product = await this.productService.createProduct({
@@ -37,8 +40,7 @@ export class ProductController implements IProductController {
     try {
       const product = await this.productService.getProductById(req.params.id);
       if (!product) {
-        res.status(404).json({ message: "Product not found" });
-        return;
+        throw new NotFoundError("Product not found");
       }
 
       ApiResponse.success(res, product);
@@ -57,7 +59,7 @@ export class ProductController implements IProductController {
         req.params.barcode
       );
       if (!product) {
-        res.status(404).json({ message: "Product not found" });
+        throw new NotFoundError("Product not found");
       }
 
       ApiResponse.success(res, product);
@@ -77,7 +79,7 @@ export class ProductController implements IProductController {
         req.body
       );
       if (!product) {
-        res.status(404).json({ message: "Product not found" });
+        throw new NotFoundError("Product not found");
       }
       ApiResponse.success(res, product);
     } catch (error) {
@@ -110,8 +112,7 @@ export class ProductController implements IProductController {
       const limitNumber = parseInt(limit as string);
 
       if (!req.user) {
-        res.status(401).json({ message: "Unauthorized" });
-        return;
+        throw new UnauthorizedError();
       }
 
       if (isNaN(pageNumber) || isNaN(limitNumber)) {

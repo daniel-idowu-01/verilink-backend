@@ -1,5 +1,5 @@
-import { ErrorRequestHandler, RequestHandler } from "express";
 import { AppError } from "../utils/errors/appError";
+import { ErrorRequestHandler, RequestHandler } from "express";
 import {
   InternalServerError,
   ConflictError,
@@ -15,7 +15,6 @@ export const errorHandler: ErrorRequestHandler = (
   res,
   next
 ) => {
-  // Handle known AppError instances
   if (err instanceof AppError) {
     res.status(err.statusCode).json({
       success: false,
