@@ -1,16 +1,8 @@
-import { Document, Schema, model } from "mongoose";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import config from "../config/constants";
-
-export interface IUser extends Document {
-  email: string;
-  password: string;
-  roles: string[];
-  vendorId?: Schema.Types.ObjectId;
-  generateAuthToken(): string;
-  matchPassword(password: string): Promise<boolean>;
-}
+import { Schema, model } from "mongoose";
+import { IUser } from "./interfaces/IUser";
 
 const userSchema = new Schema<IUser>(
   {

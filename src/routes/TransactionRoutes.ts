@@ -1,22 +1,24 @@
-import { Router } from "express";
-import { rolesMiddleware } from "../middlewares/rolesMiddleware";
 import { param } from "express-validator";
+import { Router, RequestHandler } from "express";
+import { rolesMiddleware } from "../middlewares/rolesMiddleware";
+import controllers from "../controllers/index";
 // import { validateRequest } from "../middlewares/validateRequest";
 
-export const transactionRoutes = (transactionService: any): Router => {
+export const transactionRoutes = (): Router => {
   const router = Router();
+  const transactionController = controllers.transactions;
 
   // Customer checkout
   router.post(
     "/checkout",
-    rolesMiddleware(["customer"]),
+    rolesMiddleware(["customer"]) as RequestHandler,
     transactionController.createTransaction
   );
 
   // Transaction history
   router.get(
     "/",
-    rolesMiddleware(["customer", "vendor", "admin"]),
+    rolesMiddleware(["customer", "vendor", "admin"]) as RequestHandler,
     transactionController.getUserTransactions
   );
 
@@ -26,7 +28,7 @@ export const transactionRoutes = (transactionService: any): Router => {
     [
       param("id").isMongoId(),
       // validateRequest,
-      rolesMiddleware(["customer", "vendor", "admin"]),
+      rolesMiddleware(["customer", "vendor", "admin"]) as RequestHandler,
     ],
     transactionController.getTransaction
   );
