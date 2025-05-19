@@ -33,7 +33,7 @@ export class TransactionService implements ITransactionService {
   ): Promise<ITransaction> {
     // Get and validate cart
     const cart = await this.cartRepository.findByUserId(
-      transactionData.customerId!
+      transactionData.customerId!.toString()
     );
     if (!cart || cart.items.length === 0) {
       throw new BadRequestError("Cannot create transaction with empty cart");
@@ -42,7 +42,7 @@ export class TransactionService implements ITransactionService {
     // Verify stock and calculate totals
     let subtotal = 0;
     const items = await Promise.all(
-      cart.items.map(async (item: TransactionItem) => {
+      cart.items.map(async (item) => {
         const product = await this.productRepository.findById(
           item.productId.toString()
         );
@@ -98,7 +98,9 @@ export class TransactionService implements ITransactionService {
     );
 
     // Clear cart
-    await this.cartRepository.clearCart(transactionData.customerId!);
+    await this.cartRepository.clearCart(
+      transactionData.customerId?.toString()!
+    );
 
     return transaction;
   }

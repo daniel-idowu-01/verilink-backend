@@ -1,5 +1,4 @@
 import { RequestHandler } from "express";
-import { IProduct } from "../../models/Product";
 
 export interface IProductController {
   createProduct: RequestHandler;

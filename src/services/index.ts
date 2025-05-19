@@ -1,4 +1,5 @@
 import { AuthService } from "./AuthService";
+import { CartService } from "./CartService";
 import repositories from "../repositories/index";
 import { ProductService } from "./ProductService";
 import { TransactionService } from "./TransactionService";
@@ -14,4 +15,8 @@ export default {
     repositories.productRepository,
     repositories.cartRepository
   ),
+  cartService: new CartService(
+    repositories.productRepository,
+    repositories.cartRepository
+  )
 };

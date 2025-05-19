@@ -1,4 +1,5 @@
-import { IProduct, PaginatedProductsResult } from "../../models/Product";
+import { IProduct } from "../../models/interfaces/IProduct";
+import { PaginatedProductsResult } from "../../models/Product";
 
 export interface IProductService {
   createProduct(productData: Partial<IProduct>): Promise<IProduct>;

@@ -12,10 +12,8 @@ interface PaginatedResult {
 }
 
 export class TransactionRepository implements ITransactionRepository {
-  private model: Model<ITransaction>;
-
-  constructor() {
-    this.model = Transaction;
+  constructor(private model: Model<ITransaction>) {
+    this.model = model;
   }
 
   async create(transactionData: Partial<ITransaction>) {
