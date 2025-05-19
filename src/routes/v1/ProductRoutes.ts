@@ -1,8 +1,8 @@
 import { param } from "express-validator";
-import controllers from "../controllers/index"
+import controllers from "../../controllers/index";
 import { Router, RequestHandler } from "express";
-import { authMiddleware } from "../middlewares/authMiddleware";
-import { rolesMiddleware } from "../middlewares/rolesMiddleware";
+import { authMiddleware } from "../../middlewares/authMiddleware";
+import { rolesMiddleware } from "../../middlewares/rolesMiddleware";
 // import { validateRequest } from "../middlewares/validateRequest";
 
 export const productRoutes = (): Router => {

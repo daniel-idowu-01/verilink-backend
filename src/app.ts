@@ -6,12 +6,12 @@ import helmet from "helmet";
 import express from "express";
 import mongoose from "mongoose";
 import logger from "./utils/logger";
-import services from "./services/index";
+import v1Routes from "./routes/v1/index";
 import config from "./config/constants";
 import { Product } from "./models/Product";
 // import { Vendor } from "./models/Vendor";
 // import { Transaction } from "./models/Transaction";
-import { productRoutes } from "./routes/ProductRoutes";
+import { productRoutes } from "./routes/v1/ProductRoutes";
 import { requestLogger, errorLogger } from "./middlewares/requestLogger";
 import { errorHandler, notFoundHandler } from "./middlewares/errorHandler";
 
@@ -39,7 +39,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use(requestLogger);
 
 // Routes
-app.use("/api/products", productRoutes());
+app.use("/api/v1", v1Routes);
 
 // 404 Handler
 app.use(notFoundHandler);

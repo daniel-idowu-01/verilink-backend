@@ -32,11 +32,11 @@ export class TransactionController {
         throw new UnauthorizedError();
       }
 
-      const transactions = await this.transactionService.getUserTransactions(
-        req.user.id,
-        parseInt(page as string),
-        parseInt(limit as string)
-      );
+      const transactions =
+        await this.transactionService.getCustomerTransactions(req.user.id, {
+          page: parseInt(page as string),
+          limit: parseInt(limit as string),
+        });
       ApiResponse.success(res, transactions);
     } catch (error) {
       next(error);
@@ -49,7 +49,7 @@ export class TransactionController {
         throw new UnauthorizedError();
       }
 
-      const transaction = await this.transactionService.getTransaction(
+      const transaction = await this.transactionService.getTransactionById(
         req.params.id,
         req.user.id
       );
