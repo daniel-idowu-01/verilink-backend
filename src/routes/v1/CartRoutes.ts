@@ -1,9 +1,9 @@
-import controllers from "../controllers/index";
-import { Router, RequestHandler } from "express";
-import { authMiddleware } from "../middlewares/authMiddleware";
-import { rolesMiddleware } from "../middlewares/rolesMiddleware";
 import { body, param } from "express-validator";
-// import { validateRequest } from "../middlewares/validateRequest";
+import { Router, RequestHandler } from "express";
+import controllers from "../../controllers/index";
+import { cartValidationSchemas } from "../../validations";
+import { authMiddleware } from "../../middlewares/authMiddleware";
+import { rolesMiddleware } from "../../middlewares/rolesMiddleware";
 
 export const cartRoutes = (): Router => {
   const router = Router();
@@ -13,8 +13,16 @@ export const cartRoutes = (): Router => {
   router.use(rolesMiddleware(["customer"]) as RequestHandler);
 
   router.get("/", cartController.getCart);
-  router.post("/add", cartController.addToCart);
-  router.put("/update/:productId", cartController.updateCartItem);
+  router.post(
+    "/add",
+    cartValidationSchemas.addToCart,
+    cartController.addToCart
+  );
+  router.put(
+    "/update/:productId",
+    cartValidationSchemas.updateCartItem,
+    cartController.updateCartItem
+  );
   router.delete("/remove/:productId", cartController.removeFromCart);
   router.delete("/clear", cartController.clearCart);
 

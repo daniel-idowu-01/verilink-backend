@@ -1,9 +1,9 @@
 import { param } from "express-validator";
-import controllers from "../../controllers/index";
 import { Router, RequestHandler } from "express";
+import controllers from "../../controllers/index";
+import { productValidationSchemas } from "../../validations";
 import { authMiddleware } from "../../middlewares/authMiddleware";
 import { rolesMiddleware } from "../../middlewares/rolesMiddleware";
-// import { validateRequest } from "../middlewares/validateRequest";
 
 export const productRoutes = (): Router => {
   const router = Router();
@@ -16,6 +16,7 @@ export const productRoutes = (): Router => {
   router.post(
     "/",
     rolesMiddleware(["owner", "manager"]) as RequestHandler,
+    productValidationSchemas.createProduct,
     productController.createProduct
   );
 
@@ -31,7 +32,6 @@ export const productRoutes = (): Router => {
     "/:id",
     [
       param("id").isMongoId().withMessage("Invalid product ID"),
-      // validateRequest,
       rolesMiddleware(["owner", "manager", "sales"]) as RequestHandler,
     ],
     productController.getProduct
@@ -47,11 +47,12 @@ export const productRoutes = (): Router => {
   // Update product - only owners and managers
   router.put(
     "/:id",
-    [
-      param("id").isMongoId().withMessage("Invalid product ID"),
-      // validateRequest,
-      rolesMiddleware(["owner", "manager"]) as RequestHandler,
-    ],
+    // [
+    //   param("id").isMongoId().withMessage("Invalid product ID"),
+    
+    //   rolesMiddleware(["owner", "manager"]) as RequestHandler,
+    // ],
+    productValidationSchemas.updateProduct,
     productController.updateProduct
   );
 
@@ -60,7 +61,6 @@ export const productRoutes = (): Router => {
     "/:id",
     [
       param("id").isMongoId().withMessage("Invalid product ID"),
-      // validateRequest,
       rolesMiddleware(["owner"]) as RequestHandler, // Only owners can delete
     ],
     productController.deleteProduct

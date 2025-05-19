@@ -5,6 +5,7 @@ import constants from "../../config/constants";
 import { productRoutes } from "./ProductRoutes";
 import { Router, RequestHandler } from "express";
 import { transactionRoutes } from "./TransactionRoutes";
+import { authValidationSchemas } from "../../validations";
 import { authMiddleware } from "../../middlewares/authMiddleware";
 
 const router = Router();
@@ -12,45 +13,19 @@ const router = Router();
 // Auth routes
 router.post(
   "/auth/register",
-  [
-    body("email").isEmail().normalizeEmail(),
-    body("password")
-      .trim()
-      .matches(constants.passwordRegex)
-      .withMessage(
-        "Password must be at least 8 characters, include an uppercase letter, a lowercase letter, a number, and a special character (@$!%*?&)"
-      )
-      .escape(),
-    // validateRequest,
-  ],
+  authValidationSchemas.registerUser,
   controllers.auth.registerUser
 );
 
 router.post(
   "/auth/register-vendor",
-  [
-    body("email").isEmail().normalizeEmail(),
-    body("password")
-      .trim()
-      .matches(constants.passwordRegex)
-      .withMessage(
-        "Password must be at least 8 characters, include an uppercase letter, a lowercase letter, a number, and a special character (@$!%*?&)"
-      )
-      .escape(),
-    body("businessName").notEmpty(),
-    body("businessAddress").notEmpty(),
-    // validateRequest,
-  ],
+  authValidationSchemas.registerVendor,
   controllers.auth.registerVendor
 );
 
 router.post(
   "/auth/login",
-  [
-    body("email").isEmail().normalizeEmail(),
-    body("password").notEmpty(),
-    // validateRequest,
-  ],
+  authValidationSchemas.login,
   controllers.auth.login
 );
 
