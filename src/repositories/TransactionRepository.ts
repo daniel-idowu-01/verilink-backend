@@ -1,6 +1,8 @@
 import { Model } from "mongoose";
 import { Transaction } from "../models/Transaction";
+import { PaginationOptions } from "./interfaces/IRepository";
 import { ITransaction } from "../models/interfaces/ITransaction";
+import { ITransactionRepository } from "./interfaces/ITransactionRepository";
 
 interface PaginatedResult {
   data: any[];
@@ -9,7 +11,7 @@ interface PaginatedResult {
   limit: number;
 }
 
-export class TransactionRepository {
+export class TransactionRepository implements ITransactionRepository {
   private model: Model<ITransaction>;
 
   constructor() {
@@ -37,5 +39,66 @@ export class TransactionRepository {
 
   async findById(id: string) {
     return this.model.findById(id);
+  }
+
+  async findByCustomerId(
+    customerId: string,
+    options: PaginationOptions = { page: 1, limit: 10 }
+  ): Promise<{ transactions: ITransaction[]; total: number }> {
+    const [transactions, total] = await Promise.all([
+      Transaction.find({ customerId })
+        .skip((options.page - 1) * options.limit)
+        .limit(options.limit)
+        .sort({ createdAt: -1 })
+        .populate("items.productId")
+        .exec(),
+      Transaction.countDocuments({ customerId }),
+    ]);
+
+    return { transactions, total };
+  }
+
+  async findByVendorId(
+    vendorId: string,
+    options: PaginationOptions = { page: 1, limit: 10 }
+  ): Promise<{ transactions: ITransaction[]; total: number }> {
+    const [transactions, total] = await Promise.all([
+      Transaction.find({ vendorId })
+        .skip((options.page - 1) * options.limit)
+        .limit(options.limit)
+        .sort({ createdAt: -1 })
+        .populate("customerId")
+        .populate("items.productId")
+        .exec(),
+      Transaction.countDocuments({ vendorId }),
+    ]);
+
+    return { transactions, total };
+  }
+
+  async update(
+    id: string,
+    update: Partial<ITransaction>
+  ): Promise<ITransaction | null> {
+    return Transaction.findByIdAndUpdate(id, update, { new: true })
+      .populate("customerId")
+      .populate("vendorId")
+      .populate("items.productId")
+      .exec();
+  }
+
+  async verifyExitToken(token: string): Promise<ITransaction | null> {
+    return Transaction.findOneAndUpdate(
+      {
+        exitToken: token,
+        exitTokenExpiry: { $gt: new Date() },
+        exitVerified: false,
+      },
+      {
+        exitVerified: true,
+        verificationMethod: "gate",
+      },
+      { new: true }
+    ).exec();
   }
 }

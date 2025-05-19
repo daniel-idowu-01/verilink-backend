@@ -1,10 +1,19 @@
 import { CartRepository } from "../repositories/CartRepository";
-import { ITransaction } from "../models/interfaces/ITransaction";
-import { NotFoundError, BadRequestError } from "../utils/errors";
 import { ProductRepository } from "../repositories/ProductRepository";
+import { ITransactionService } from "./interfaces/ITransactionService";
+import { PaginationOptions } from "../repositories/interfaces/IRepository";
 import { TransactionRepository } from "../repositories/TransactionRepository";
+import {
+  NotFoundError,
+  BadRequestError,
+  ForbiddenError,
+} from "../utils/errors";
+import {
+  ITransaction,
+  TransactionStatus,
+} from "../models/interfaces/ITransaction";
 
-export class TransactionService {
+export class TransactionService implements ITransactionService {
   constructor(
     private transactionRepository: TransactionRepository,
     private productRepository: ProductRepository,
@@ -18,7 +27,7 @@ export class TransactionService {
   async createTransaction(transactionData: Partial<ITransaction>) {
     // Get user's cart
     const cart = await this.cartRepository.findByUserId(
-      transactionData.userId!
+      transactionData.customerId!
     );
     if (!cart || cart.items.length === 0) {
       throw new BadRequestError("Cart is empty");
@@ -44,7 +53,7 @@ export class TransactionService {
       ...transactionData,
       items: cart.items,
       total,
-      status: "completed",
+      paymentStatus: TransactionStatus.COMPLETED,
     });
 
     // Update product stock
@@ -53,7 +62,7 @@ export class TransactionService {
     }
 
     // Clear cart
-    await this.cartRepository.clearCart(transactionData.userId!);
+    await this.cartRepository.clearCart(transactionData.customerId!);
 
     return transaction;
   }
@@ -69,8 +78,47 @@ export class TransactionService {
   async getTransaction(id: string, userId: string) {
     const transaction = await this.transactionRepository.findById(id);
     if (!transaction) throw new NotFoundError("Transaction not found");
-    if (transaction.userId.toString() !== userId) {
+    if (transaction.customerId.toString() !== userId) {
       throw new BadRequestError("Unauthorized access to transaction");
+    }
+    return transaction;
+  }
+
+  async getTransactionById(id: string, userId: string): Promise<ITransaction> {
+    const transaction = await this.transactionRepository.findById(id);
+    if (!transaction) {
+      throw new NotFoundError("Transaction not found");
+    }
+
+    // Verify ownership
+    if (
+      transaction.customerId.toString() !== userId &&
+      transaction.vendorId.toString() !== userId
+    ) {
+      throw new ForbiddenError("Unauthorized to access this transaction");
+    }
+
+    return transaction;
+  }
+
+  async getCustomerTransactions(
+    customerId: string,
+    options: PaginationOptions = { page: 1, limit: 10 }
+  ): Promise<{ transactions: ITransaction[]; total: number }> {
+    return this.transactionRepository.findByCustomerId(customerId, options);
+  }
+
+  async getVendorTransactions(
+    vendorId: string,
+    options: PaginationOptions = { page: 1, limit: 10 }
+  ): Promise<{ transactions: ITransaction[]; total: number }> {
+    return this.transactionRepository.findByVendorId(vendorId, options);
+  }
+
+  async verifyExitToken(token: string): Promise<ITransaction> {
+    const transaction = await this.transactionRepository.verifyExitToken(token);
+    if (!transaction) {
+      throw new BadRequestError("Invalid or expired exit token");
     }
     return transaction;
   }
