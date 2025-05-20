@@ -1,11 +1,11 @@
 import { AuthService } from "../services/AuthService";
 import { ApiResponse } from "../utils/responseHandler";
 import { Request, Response, NextFunction } from "express";
+import { IAuthService } from "../services/interfaces/IAuthService";
+import { IAuthController } from "./interfaces/IAuthController";
 
-export class AuthController {
-  // private authService: AuthService;
-
-  constructor(private authService: any) {}
+export class AuthController implements IAuthController {
+  constructor(private authService: IAuthService) {}
 
   async registerUser(req: Request, res: Response, next: NextFunction) {
     try {
