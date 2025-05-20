@@ -1,4 +1,8 @@
-const constants = {
+import dotenv from "dotenv";
+
+dotenv.config();
+
+export const constants = {
   MONGODB_URI: process.env.MONGODB_URI || "mongodb://localhost:27017/myapp",
   PORT: process.env.PORT || 3000,
   JWT_SECRET: process.env.JWT_SECRET || "your_jwt_secret",
@@ -9,5 +13,3 @@ const constants = {
   passwordRegex:
     /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/,
 };
-
-export default constants;

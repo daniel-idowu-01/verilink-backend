@@ -1,13 +1,13 @@
 import bcrypt from "bcryptjs";
+import { ObjectId } from "mongodb";
 // import { User } from "../models/User";
 // import { Vendor } from "../models/Vendor";
 import { BadRequestError } from "../utils/errors";
+import { UserRole } from "../models/interfaces/IUser";
 import { UserRepository } from "../repositories/UserRepository";
-import { ObjectId } from "mongoose";
 // import { VendorRepository } from "../repositories/VendorRepository";
 
 export class AuthService {
-
   constructor(
     private userRepository: UserRepository,
     private vendorRepository: UserRepository
@@ -21,7 +21,7 @@ export class AuthService {
     const user = await this.userRepository.create({
       email,
       password: hashedPassword,
-      roles: ["customer"],
+      roles: [UserRole.CUSTOMER],
     });
 
     return {
@@ -32,7 +32,7 @@ export class AuthService {
 
   async registerVendor(email: string, password: string, vendorData: any) {
     const userResult = await this.registerUser(email, password);
-    userResult.user.roles.push("vendor");
+    userResult.user.roles.push(UserRole.VENDOR);
     await userResult.user.save();
 
     const vendor = await this.vendorRepository.create({

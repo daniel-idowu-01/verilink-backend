@@ -1,7 +1,8 @@
 import { BadRequestError } from "../utils/errors";
+import { IProduct } from "../models/interfaces/IProduct";
 import { generateBarcode } from "../utils/barcodeGenerator";
+import { PaginatedProductsResult } from "../models/Product";
 import { IProductService } from "./interfaces/IProductService";
-import { IProduct, PaginatedProductsResult } from "../models/Product";
 import { IProductRepository } from "../repositories/interfaces/IProductRepository";
 
 export class ProductService implements IProductService {

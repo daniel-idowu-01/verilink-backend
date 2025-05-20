@@ -1,8 +1,7 @@
 import { param } from "express-validator";
 import { Router, RequestHandler } from "express";
-import { rolesMiddleware } from "../middlewares/rolesMiddleware";
-import controllers from "../controllers/index";
-// import { validateRequest } from "../middlewares/validateRequest";
+import controllers from "../../controllers/index"
+import { rolesMiddleware } from "../../middlewares/rolesMiddleware";
 
 export const transactionRoutes = (): Router => {
   const router = Router();

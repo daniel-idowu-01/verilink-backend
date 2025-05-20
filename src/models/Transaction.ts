@@ -66,7 +66,7 @@ transactionSchema.virtual("vendor", {
 // Indexes for better query performance
 transactionSchema.index({ customerId: 1 });
 transactionSchema.index({ vendorId: 1 });
-transactionSchema.index({ exitToken: 1 });
+// transactionSchema.index({ exitToken: 1 });
 transactionSchema.index({ createdAt: -1 });
 transactionSchema.index({ paymentStatus: 1 });
 

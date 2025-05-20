@@ -2,6 +2,7 @@ import { Document, Schema } from "mongoose";
 
 export interface IProduct extends Document {
   vendorId: Schema.Types.ObjectId;
+  productId: string;
   name: string;
   description?: string;
   price: number;

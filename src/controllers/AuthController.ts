@@ -5,7 +5,7 @@ import { IAuthService } from "../services/interfaces/IAuthService";
 import { IAuthController } from "./interfaces/IAuthController";
 
 export class AuthController implements IAuthController {
-  constructor(private authService: IAuthService) {}
+  constructor(private authService: any) {}
 
   async registerUser(req: Request, res: Response, next: NextFunction) {
     try {

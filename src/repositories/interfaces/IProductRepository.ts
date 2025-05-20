@@ -1,5 +1,5 @@
 import { Document } from "mongoose";
-import { IProduct } from "../../models/Product";
+import { IProduct } from "../../models/interfaces/IProduct";
 
 export interface IProductRepository {
   create(productData: Partial<IProduct>): Promise<IProduct>;

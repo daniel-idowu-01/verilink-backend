@@ -1,6 +1,6 @@
-import winston from 'winston';
-import { environment } from '../config/environment';
-import DailyRotateFile from 'winston-daily-rotate-file';
+import winston from "winston";
+import { constants } from "../config/constants";
+import DailyRotateFile from "winston-daily-rotate-file";
 
 const { combine, timestamp, printf, colorize, errors } = winston.format;
 
@@ -15,23 +15,23 @@ const levels = {
 
 // Determine log level based on environment
 const level = () => {
-  return environment.NODE_ENV === 'development' ? 'debug' : 'info';
+  return constants.NODE_ENV === "development" ? "debug" : "info";
 };
 
 // Define log colors
 const colors = {
-  error: 'red',
-  warn: 'yellow',
-  info: 'green',
-  http: 'magenta',
-  debug: 'white',
+  error: "red",
+  warn: "yellow",
+  info: "green",
+  http: "magenta",
+  debug: "white",
 };
 
 winston.addColors(colors);
 
 // Custom log format
 const logFormat = combine(
-  timestamp({ format: 'YYYY-MM-DD HH:mm:ss:ms' }),
+  timestamp({ format: "YYYY-MM-DD HH:mm:ss:ms" }),
   errors({ stack: true }),
   printf((info) => {
     let message = `${info.timestamp} ${info.level}: ${info.message}`;
@@ -45,7 +45,7 @@ const logFormat = combine(
 // Console transport format (with colors)
 const consoleFormat = combine(
   colorize({ all: true }),
-  timestamp({ format: 'YYYY-MM-DD HH:mm:ss:ms' }),
+  timestamp({ format: "YYYY-MM-DD HH:mm:ss:ms" }),
   printf((info) => {
     let message = `${info.timestamp} ${info.level}: ${info.message}`;
     if (info.stack) {
@@ -57,21 +57,21 @@ const consoleFormat = combine(
 
 // File transport for errors only
 const errorFileTransport = new DailyRotateFile({
-  level: 'error',
-  filename: 'logs/error-%DATE%.log',
-  datePattern: 'YYYY-MM-DD',
+  level: "error",
+  filename: "logs/error-%DATE%.log",
+  datePattern: "YYYY-MM-DD",
   zippedArchive: true,
-  maxSize: '20m',
-  maxFiles: '30d',
+  maxSize: "20m",
+  maxFiles: "30d",
 });
 
 // File transport for all logs
 const combinedFileTransport = new DailyRotateFile({
-  filename: 'logs/combined-%DATE%.log',
-  datePattern: 'YYYY-MM-DD',
+  filename: "logs/combined-%DATE%.log",
+  datePattern: "YYYY-MM-DD",
   zippedArchive: true,
-  maxSize: '20m',
-  maxFiles: '30d',
+  maxSize: "20m",
+  maxFiles: "30d",
 });
 
 // Create logger instance
@@ -87,10 +87,10 @@ const logger = winston.createLogger({
     combinedFileTransport,
   ],
   exceptionHandlers: [
-    new winston.transports.File({ filename: 'logs/exceptions.log' }),
+    new winston.transports.File({ filename: "logs/exceptions.log" }),
   ],
   rejectionHandlers: [
-    new winston.transports.File({ filename: 'logs/rejections.log' }),
+    new winston.transports.File({ filename: "logs/rejections.log" }),
   ],
 });
 

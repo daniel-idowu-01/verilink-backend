@@ -41,14 +41,20 @@ export class TransactionService implements ITransactionService {
 
     // Verify stock and calculate totals
     let subtotal = 0;
-    const items = await Promise.all(
+    const items: any = await Promise.all(
       cart.items.map(async (item) => {
         const product = await this.productRepository.findById(
           item.productId.toString()
         );
+
         if (!product) {
           throw new NotFoundError(`Product ${item.productId} not found`);
         }
+
+        if (!product._id || typeof product._id.toString !== 'function') {
+          throw new Error('Invalid product ID');
+        }
+
         if (product.stockQuantity < item.quantity) {
           throw new BadRequestError(
             `Insufficient stock for product ${product.name}`
@@ -87,10 +93,9 @@ export class TransactionService implements ITransactionService {
     });
 
     // Update product stock
-
     await Promise.all<void>(
       items.map((item: TransactionItem) =>
-        this.productRepository.updateStock(
+        void this.productRepository.updateStock(
           item.productId.toString(),
           -item.quantity
         )

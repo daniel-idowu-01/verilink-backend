@@ -2,7 +2,7 @@ import { Schema, model } from "mongoose";
 import bcrypt from "bcryptjs";
 import jwt, { Secret, SignOptions } from "jsonwebtoken";
 import crypto from "crypto";
-import config from "../config/constants";
+import { constants } from "../config/constants";
 import { IUser, UserRole } from "./interfaces/IUser";
 
 const userSchema = new Schema<IUser>(
@@ -87,8 +87,8 @@ userSchema.methods.generateAuthToken = function () {
       roles: this.roles,
       vendorId: this.vendorId,
     },
-    config.JWT_SECRET as Secret,
-    { expiresIn: config.JWT_EXPIRES_IN } as SignOptions
+    constants.JWT_SECRET as Secret,
+    { expiresIn: constants.JWT_EXPIRES_IN } as SignOptions
   );
 };
 

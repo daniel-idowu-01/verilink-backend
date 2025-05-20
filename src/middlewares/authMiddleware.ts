@@ -1,5 +1,5 @@
 import jwt from "jsonwebtoken";
-import config from "../config/constants"
+import { constants } from "../config/constants"
 import { Request, Response, NextFunction } from "express";
 
 declare global {
@@ -24,7 +24,7 @@ export const authMiddleware = (
       return res.status(401).json({ message: "No token provided" });
     }
 
-    const decoded = jwt.verify(token, config.JWT_SECRET) as {
+    const decoded = jwt.verify(token, constants.JWT_SECRET) as {
       id: string;
       roles: string[];
     };

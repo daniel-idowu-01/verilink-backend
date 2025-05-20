@@ -1,5 +1,5 @@
 import { body } from "express-validator";
-import constants from "../config/constants";
+import { constants } from "../config/constants";
 
 export const authValidationSchemas = {
   registerUser: [
