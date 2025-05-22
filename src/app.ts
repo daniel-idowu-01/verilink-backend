@@ -2,19 +2,15 @@ import fs from "fs";
 import path from "path";
 import cors from "cors";
 import morgan from "morgan";
+import dotenv from "dotenv";
 import helmet from "helmet";
 import express from "express";
 import mongoose from "mongoose";
 import logger from "./utils/logger";
 import v1Routes from "./routes/v1/index";
-import { Product } from "./models/Product";
 import { constants } from "./config/constants";
-// import { Vendor } from "./models/Vendor";
-// import { Transaction } from "./models/Transaction";
-import { productRoutes } from "./routes/v1/ProductRoutes";
 import { requestLogger, errorLogger } from "./middlewares/requestLogger";
 import { errorHandler, notFoundHandler } from "./middlewares/errorHandler";
-import dotenv from "dotenv";
 
 // Load environment variables
 dotenv.config();

@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
-    "dev": "ts-node src/app.ts",
+    "dev": "nodemon",
     "build": "tsc",
     "start": "node dist/app.js",
     "test": "jest"
@@ -41,6 +41,7 @@
     "@types/node": "^22.15.18",
     "@types/qrcode": "^1.5.5",
     "@types/winston": "^2.4.4",
+    "nodemon": "^3.1.10",
     "ts-node": "^10.9.2",
     "typescript": "^5.8.3"
   }

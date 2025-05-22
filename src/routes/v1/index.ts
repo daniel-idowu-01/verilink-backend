@@ -7,6 +7,7 @@ import { constants } from "../../config/constants";
 import { transactionRoutes } from "./TransactionRoutes";
 import { authValidationSchemas } from "../../validations";
 import { authMiddleware } from "../../middlewares/authMiddleware";
+import { validateRequest } from "../../middlewares/validateRequest";
 
 const router = Router();
 
@@ -14,6 +15,7 @@ const router = Router();
 router.post(
   "/auth/register",
   authValidationSchemas.registerUser,
+  validateRequest,
   controllers.auth.registerUser
 );
 

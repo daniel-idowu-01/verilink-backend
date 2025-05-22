@@ -1,24 +1,24 @@
 import { param } from "express-validator";
 import { Router, RequestHandler } from "express";
-import controllers from "../../controllers/index"
+// import controllers from "../../controllers/index"
 import { rolesMiddleware } from "../../middlewares/rolesMiddleware";
 
 export const transactionRoutes = (): Router => {
   const router = Router();
-  const transactionController = controllers.transactions;
+  // const transactionController = controllers.transactions;
 
   // Customer checkout
   router.post(
     "/checkout",
     rolesMiddleware(["customer"]) as RequestHandler,
-    transactionController.createTransaction
+    // transactionController.createTransaction
   );
 
   // Transaction history
   router.get(
     "/",
     rolesMiddleware(["customer", "vendor", "admin"]) as RequestHandler,
-    transactionController.getUserTransactions
+    // transactionController.getUserTransactions
   );
 
   // Transaction details
@@ -29,7 +29,7 @@ export const transactionRoutes = (): Router => {
       // validateRequest,
       rolesMiddleware(["customer", "vendor", "admin"]) as RequestHandler,
     ],
-    transactionController.getTransaction
+    // transactionController.getTransaction
   );
 
   return router;

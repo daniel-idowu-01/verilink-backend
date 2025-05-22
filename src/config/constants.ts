@@ -12,4 +12,5 @@ export const constants = {
   LOG_DIR: process.env.LOG_DIR || "logs",
   passwordRegex:
     /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/,
+  emailRegex: /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/,
 };

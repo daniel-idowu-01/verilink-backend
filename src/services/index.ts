@@ -8,7 +8,7 @@ export default {
   productService: new ProductService(repositories.productRepository),
   authService: new AuthService(
     repositories.userRepository,
-    repositories.userRepository
+    repositories.vendorRepository
   ),
   transactionService: new TransactionService(
     repositories.transactionRepository,

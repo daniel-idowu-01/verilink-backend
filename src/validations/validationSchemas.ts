@@ -3,14 +3,19 @@ import { constants } from "../config/constants";
 
 export const authValidationSchemas = {
   registerUser: [
-    body("email").isEmail().normalizeEmail(),
+    body().notEmpty().withMessage("Request body cannot be empty"),
+    body("email")
+      .isEmail()
+      .withMessage("Email is not valid")
+      .normalizeEmail({ gmail_remove_dots: false }),
     body("password")
+      .notEmpty()
+      .withMessage("Password is required")
       .trim()
       .matches(constants.passwordRegex)
       .withMessage(
         "Password must be at least 8 characters, include an uppercase letter, a lowercase letter, a number, and a special character (@$!%*?&)"
-      )
-      .escape(),
+      ),
   ],
 
   registerVendor: [

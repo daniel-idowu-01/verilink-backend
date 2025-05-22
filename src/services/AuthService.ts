@@ -5,12 +5,12 @@ import { ObjectId } from "mongodb";
 import { BadRequestError } from "../utils/errors";
 import { UserRole } from "../models/interfaces/IUser";
 import { UserRepository } from "../repositories/UserRepository";
-// import { VendorRepository } from "../repositories/VendorRepository";
+import { VendorRepository } from "../repositories/VendorRepository";
 
 export class AuthService {
   constructor(
     private userRepository: UserRepository,
-    private vendorRepository: UserRepository
+    private vendorRepository: VendorRepository  
   ) {}
 
   async registerUser(email: string, password: string) {
